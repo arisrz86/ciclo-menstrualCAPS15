@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hablemos del Ciclo Menstrual - Una Guía Interactiva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Custom palette inspired by "Warm & Welcoming" with a light warm background and gentle accents. -->
+    <!-- Application Structure Plan: A thematic, single-page scrolling application. Starts with high-level positive messages (cards), explains the "what" (HTML flow diagram), provides an interactive "how" (clickable Donut chart for cycle phases), details symptoms (styled cards), and concludes with actionable advice. This non-linear, explorable structure is more engaging for a young audience than a slide-by-slide presentation, encouraging self-paced learning. -->
+    <!-- Visualization & Content Choices: 1. Cycle Phases: Report Info -> 4 phases of the cycle. Goal -> Organize/Change. Viz -> Interactive Donut Chart (Chart.js/Canvas) with an updatable text panel. Interaction -> User clicks a phase button to see its description. Justification -> Visually represents the cyclical nature and relative duration of phases; interaction encourages exploration. 2. Menstruation Process: Report Info -> "Casita" metaphor steps. Goal -> Organize. Viz -> Styled HTML/CSS flow diagram. Justification -> Simple, clear, step-by-step visual that requires no complex libraries. 3. Symptoms: Report Info -> Table of symptoms and aids. Goal -> Inform. Viz -> Styled HTML cards with icons. Justification -> Highly readable and digestible format for the target audience, better than a dense table. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FFFBF5;
+            color: #4A4A4A;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .phase-button.active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="text-center py-12 px-4 bg-[#FADBD8]">
+        <h1 class="text-4xl md:text-5xl font-bold text-[#C33C54]">Un Proceso Natural y Poderoso</h1>
+        <p class="mt-4 max-w-2xl mx-auto text-lg text-[#5E3C3C]">Les damos la bienvenida a esta guía para entender el ciclo menstrual. Aquí, la comunicación y el respeto son lo más importante.</p>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+        
+        <section class="my-12">
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="bg-white rounded-lg shadow-lg p-6 transform hover:-translate-y-1 transition-transform duration-300">
+                    <div class="text-4xl mb-4">🌱</div>
+                    <h3 class="text-2xl font-bold text-[#27AE60]">Es un Signo de Salud</h3>
+                    <p class="mt-2 text-gray-600">La menstruación es un proceso biológico tan normal como respirar. Indica que el cuerpo está funcionando bien.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6 transform hover:-translate-y-1 transition-transform duration-300">
+                    <div class="text-4xl mb-4">💬</div>
+                    <h3 class="text-2xl font-bold text-[#2980B9]">Romper Mitos</h3>
+                    <p class="mt-2 text-gray-600">Entender nuestro cuerpo nos ayuda a cuidarnos mejor y a hablar del tema sin miedos ni vergüenza. ¡No hay preguntas tontas!</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6 transform hover:-translate-y-1 transition-transform duration-300">
+                    <div class="text-4xl mb-4">💖</div>
+                    <h3 class="text-2xl font-bold text-[#8E44AD]">Cuida tu Cuerpo</h3>
+                    <p class="mt-2 text-gray-600">Aprender sobre el ciclo menstrual es el primer paso para conocer y respetar tu cuerpo y el de los demás.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="my-16 bg-white rounded-lg shadow-xl p-8 md:p-12">
+            <h2 class="text-3xl font-bold text-center text-[#C33C54] mb-8">Menstruación: La Limpieza Mensual del Cuerpo</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <p class="text-lg mb-4">Imagina que el **útero** es como una camita muy comoda. Cada mes, esta camita prepara una "almohada" suave y gruesa por si un futuro bebé necesitara un lugar cómodo para crecer.</p>
+                    <p class="text-lg">Si no hay un bebé en camino ese mes, el cuerpo, de forma muy inteligente, decide que no necesita esa almohada. Entonces, la deshace y la expulsa junto a un poco de sangre. ¡A este proceso de auto-limpieza lo llamamos **menstruación** o **período**!</p>
+                </div>
+                 <div class="flex flex-col items-center space-y-4 p-4 rounded-lg bg-[#FDF2E9]">
+                    <div class="w-full text-center bg-white p-4 rounded-lg shadow-md border-l-4 border-[#F39C12]">
+                        <h4 class="font-bold text-[#F39C12]">1. Se prepara la "almohada"</h4>
+                        <p class="text-sm text-gray-600">El útero crea una capa suave (endometrio).</p>
+                    </div>
+                    <div class="text-2xl font-bold text-[#D35400]">&darr;</div>
+                    <div class="w-full text-center bg-white p-4 rounded-lg shadow-md border-l-4 border-[#E74C3C]">
+                        <h4 class="font-bold text-[#E74C3C]">2. La "almohada" no se usa</h4>
+                        <p class="text-sm text-gray-600">El cuerpo entiende que no hay embarazo.</p>
+                    </div>
+                    <div class="text-2xl font-bold text-[#D35400]">&darr;</div>
+                    <div class="w-full text-center bg-white p-4 rounded-lg shadow-md border-l-4 border-[#C0392B]">
+                        <h4 class="font-bold text-[#C0392B]">3. ¡Limpieza!</h4>
+                        <p class="text-sm text-gray-600">Se expulsa la capa. Esto es el período y dura de 3 a 7 días.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="my-16">
+            <h2 class="text-3xl font-bold text-center text-[#C33C54] mb-2">Exploremos las 4 Estaciones del Ciclo</h2>
+            <p class="text-lg text-center text-gray-700 max-w-3xl mx-auto mb-8">El ciclo menstrual dura unos 28 días (¡pero cada cuerpo es un mundo!) y se parece a las estaciones del año. Haz clic en cada fase para saber más.</p>
+            <div class="bg-white rounded-lg shadow-xl p-8 md:p-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <div class="chart-container">
+                        <canvas id="cycleChart"></canvas>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap justify-center gap-2 mb-6">
+                            <button data-phase="0" class="phase-button active font-semibold py-2 px-4 rounded-full transition-all duration-300" style="background-color: #FADBD8; color: #C0392B;">Invierno</button>
+                            <button data-phase="1" class="phase-button font-semibold py-2 px-4 rounded-full transition-all duration-300" style="background-color: #FEF9E7; color: #F39C12;">Primavera</button>
+                            <button data-phase="2" class="phase-button font-semibold py-2 px-4 rounded-full transition-all duration-300" style="background-color: #E8F8F5; color: #16A085;">Verano</button>
+                            <button data-phase="3" class="phase-button font-semibold py-2 px-4 rounded-full transition-all duration-300" style="background-color: #EBF5FB; color: #2980B9;">Otoño</button>
+                        </div>
+                        <div id="phaseInfo" class="p-6 rounded-lg bg-gray-50 min-h-[200px]">
+                            <h3 id="phaseTitle" class="text-2xl font-bold"></h3>
+                            <p id="phaseDescription" class="mt-2 text-gray-700"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="my-16">
+            <h2 class="text-3xl font-bold text-center text-[#C33C54] mb-8">¿Cómo me siento y cómo me cuido?</h2>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-[#C0392B] mb-3">Cólicos (dolor de vientre)</h3>
+                    <p class="text-gray-600 mb-4">Puede sentirse como un apretón o calambre. Es una de las sensaciones más comunes.</p>
+                    <p class="font-semibold text-green-700 bg-green-100 p-3 rounded-lg"><strong>¿Qué ayuda?</strong> Aplicar calor con una bolsa de agua tibia, hacer ejercicio suave como caminar y hablar con un adulto de confianza.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-[#2980B9] mb-3">Cambios de Ánimo (SPM)</h3>
+                    <p class="text-gray-600 mb-4">Es normal sentirse más sensible, irritable o con ganas de llorar, sobre todo antes del período.</p>
+                     <p class="font-semibold text-green-700 bg-green-100 p-3 rounded-lg"><strong>¿Qué ayuda?</strong> Descansar lo suficiente, ser paciente contigo, y practicar respiraciones profundas para calmarte.</p>
+                </div>
+                 <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-[#F39C12] mb-3">Cansancio o Hinchazón</h3>
+                    <p class="text-gray-600 mb-4">Puedes sentir el cuerpo un poco más pesado o los senos más sensibles de lo normal.</p>
+                     <p class="font-semibold text-green-700 bg-green-100 p-3 rounded-lg"><strong>¿Qué ayuda?</strong> Mantener una buena alimentación, beber suficiente agua y usar ropa cómoda.</p>
+                </div>
+            </div>
+            <div class="mt-8 bg-blue-50 text-blue-800 p-6 rounded-lg shadow-md text-center">
+                 <h4 class="font-bold text-lg">No te olvides de la higiene</h4>
+                 <p class="mt-2">Es muy importante usar productos como toallas sanitarias, tampones o copas menstruales y cambiarlos cada ciertas horas. ¡Es clave para tu comodidad y salud!</p>
+            </div>
+        </section>
+
+        <section class="my-16 bg-[#FADBD8] rounded-lg p-8 md:p-12 text-center">
+             <h2 class="text-3xl font-bold text-[#C33C54] mb-4">¡Preguntar y Cuidarse es lo más Importante!</h2>
+             <p class="text-lg text-[#5E3C3C] max-w-3xl mx-auto mb-8">La menstruación no es un tema secreto. Hablar, preguntar y saber cuándo buscar apoyo es fundamental para todas y todos.</p>
+             <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="font-bold text-xl text-gray-800">¿Cuándo buscar ayuda de un profesional (médico/a)?</h3>
+                <ul class="mt-4 text-left space-y-2 list-disc list-inside text-gray-700">
+                    <li>Si el dolor es tan fuerte que te impide hacer tus actividades normales como ir a la escuela o jugar.</li>
+                    <li>Si el sangrado es muy, muy abundante o dura más de 8 días.</li>
+                    <li>Si tienes cualquier duda que te genere preocupación o angustia.</li>
+                </ul>
+             </div>
+        </section>
+
+    </main>
+    
+    <footer class="text-center py-8 px-4 bg-[#4A4A4A] text-white">
+        <p>Tu ciclo es único. Aprender a conocerlo te da información valiosa sobre tu salud.</p>
+        <p class="text-sm mt-2 text-gray-400">Esta es una guía educativa diseñada por profesionales del CAPS XV - Pres Arturo Illia. No reemplaza la consulta médica. No dudes en consultarnos!.</p>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const phaseData = {
+            '0': {
+                title: 'Fase 1: Menstruación (Invierno ❄️)',
+                description: 'Días 1-7. Es el inicio del ciclo, marcado por el sangrado. El cuerpo está en modo limpieza. Es normal sentir menos energía y necesitar más descanso. ¡Es un buen momento para actividades tranquilas!'
+            },
+            '1': {
+                title: 'Fase 2: Pre-ovulación (Primavera 🌱)',
+                description: 'Días 8-14. ¡La energía vuelve! El cuerpo se prepara para la siguiente fase y construye una nueva "almohada" en el útero. Te sentirás más fuerte y con mejor estado de ánimo.'
+            },
+            '2': {
+                title: 'Fase 3: Ovulación (Verano ☀️)',
+                description: 'Alrededor del día 14. ¡Es el pico de energía! Uno de los ovarios libera un óvulo. Es el momento de mayor fertilidad del ciclo.'
+            },
+            '3': {
+                title: 'Fase 4: Pre-menstruación (Otoño 🍂)',
+                description: 'Días 15-28. El cuerpo está en espera. Las hormonas cambian y es cuando puede aparecer el famoso Síndrome Premenstrual (SPM), haciéndote sentir más sensible, irritable o con algo de dolor.'
+            }
+        };
+
+        const phaseTitleEl = document.getElementById('phaseTitle');
+        const phaseDescriptionEl = document.getElementById('phaseDescription');
+        const phaseButtons = document.querySelectorAll('.phase-button');
+        let cycleChart;
+
+        function updatePhaseInfo(phaseIndex) {
+            const data = phaseData[phaseIndex];
+            phaseTitleEl.textContent = data.title;
+            phaseDescriptionEl.textContent = data.description;
+
+            phaseButtons.forEach(button => {
+                button.classList.remove('active');
+                if (button.dataset.phase === phaseIndex) {
+                    button.classList.add('active');
+                }
+            });
+            
+            if (cycleChart) {
+                 cycleChart.data.datasets[0].borderWidth = cycleChart.data.datasets[0].data.map((_, i) => i == phaseIndex ? 8 : 4);
+                 cycleChart.update();
+            }
+        }
+
+        phaseButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                updatePhaseInfo(button.dataset.phase);
+            });
+        });
+
+        const ctx = document.getElementById('cycleChart');
+        if (ctx) {
+            cycleChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Menstruación', 'Pre-ovulación', 'Ovulación', 'Pre-menstruación'],
+                    datasets: [{
+                        label: 'Fases del Ciclo',
+                        data: [7, 7, 1, 13],
+                        backgroundColor: [
+                            '#FADBD8', 
+                            '#FEF9E7',
+                            '#E8F8F5',
+                            '#EBF5FB'
+                        ],
+                        borderColor: [
+                            '#C0392B',
+                            '#F39C12',
+                            '#16A085',
+                            '#2980B9'
+                        ],
+                        borderWidth: 4,
+                        hoverOffset: 4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    const item = tooltipItems[0];
+                                    let label = item.chart.data.labels[item.dataIndex];
+                                    if (Array.isArray(label)) {
+                                      return label.join(' ');
+                                    } else {
+                                      return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        updatePhaseInfo('0');
+    });
+    </script>
+</body>
+</html>
